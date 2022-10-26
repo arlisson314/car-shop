@@ -35,5 +35,4 @@ describe('Car Service', () => {
       expect(error).to.be.instanceOf(ZodError);
     });
   });
-
 });
