@@ -11,9 +11,18 @@ describe('Car Model', () => {
   before(() => {
     sinon.stub(Model, 'create').resolves(carMockWithId),
     sinon.stub(Model, 'find').resolves(carMockList),
-    sinon.stub(Model, 'findOne').resolves(carMockWithId),
-    sinon.stub(Model, 'findByIdAndUpdate').resolves(carMockWithId),
+
+    sinon.stub(Model, 'findById')
+			.onCall(0).resolves(carMockWithId)
+			.onCall(1).resolves(null),
+
+    sinon.stub(Model, 'findByIdAndUpdate')
+			.onCall(0).resolves(carMockWithId)
+			.onCall(1).resolves(null),
+
     sinon.stub(Model, 'findByIdAndDelete').resolves(carMockWithId)
+			.onCall(0).resolves(carMockWithId)
+      .onCall(1).resolves(null)
   });
 
   after(() => { sinon.restore() });
@@ -45,6 +54,11 @@ describe('Car Model', () => {
 				expect(error.message).to.be.equal(ErrorTypes.InvalidMongoId);
 			}
 		});
+
+		it('Returns null when id does not exist in database', async () => {
+      const carUpdate = await carModel.readOne(carMockWithId._id);
+      expect(carUpdate).to.be.null;
+    });
 	});
 
   describe('searching and update cars', () => {
@@ -60,6 +74,12 @@ describe('Car Model', () => {
 				expect(error.message).to.be.equal(ErrorTypes.InvalidMongoId);
 			}
 		});
+
+		it('Returns null when id does not exist in database', async () => {
+      const carUpdate = await carModel.update(carMockWithId._id, carMockWithId);
+      expect(carUpdate).to.be.null;
+    });
+		
 	});
 
   describe('searching and deleting cars', () => {
@@ -75,6 +95,11 @@ describe('Car Model', () => {
 				expect(error.message).to.be.equal(ErrorTypes.InvalidMongoId);
 			}
 		});
+
+		it('Returns null when id does not exist in database', async () => {
+      const carUpdate = await carModel.delete(carMockWithId._id);
+      expect(carUpdate).to.be.null;
+    });
 	});
 
 });
