@@ -9,13 +9,18 @@ class CarService implements IService<ICar> {
     this._cars = model;
   }
 
-  public async create(obj:unknown):Promise<ICar> {
+  public async create(obj:unknown): Promise<ICar> {
     const parsed = CarZodSchema.safeParse(obj);
 
     if (!parsed.success) {
       throw parsed.error;
     }
+  
     return this._cars.create(parsed.data);
+  }
+
+  public async read(): Promise<ICar[]> {
+    return this._cars.read();
   }
 }
 
