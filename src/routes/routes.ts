@@ -9,6 +9,6 @@ const cars = new Cars();
 const carService = new CarService(cars);
 const carController = new CarController(carService);
 
-route.post('/cars', (req, res) => carController.creat(req, res));
+route.post('/cars', (req, res) => carController.create(req, res));
 
 export default route;
